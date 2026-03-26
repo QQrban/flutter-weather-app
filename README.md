@@ -6,14 +6,18 @@ Simple Flutter weather app with:
 - animated weather states via Lottie
 - loading and empty/error states
 
+<p align="center">
+  <img src="./screen.png" alt="App Screenshot" width="200" />
+</p>
+
 ## Table of Contents
 - [About The Project](#about-the-project)
 - [Built With](#built-with)
 - [Getting Started](#getting-started)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
+- [IDE and Devices](#ide-and-devices)
 - [Usage](#usage)
-- [Roadmap](#roadmap)
 - [Contact](#contact)
 - [Acknowledgments](#acknowledgments)
 
@@ -46,9 +50,15 @@ To get a local copy up and running, follow these steps.
 
 ## Prerequisites
 
-- Flutter SDK installed
-- Android Studio / Xcode (depending on target platform)
+- Flutter SDK (stable channel)
 - OpenWeather API key
+- For Android: Android SDK + emulator/device support
+- For iOS Xcode + iOS Simulator
+- VS Code with Flutter and Dart extensions, or Android Studio as IDE
+
+Notes:
+- Android Studio is not strictly required as an IDE, but it is the easiest way to install/manage Android SDK and AVD emulators.
+- If you run from VS Code, device discovery and launch still come from Flutter tools (`flutter devices`, `flutter run`).
 
 ## Installation
 
@@ -72,6 +82,18 @@ OPEN_WEATHER_API_KEY=your_openweather_api_key
 ```bash
 flutter run
 ```
+
+## IDE and Devices
+
+When VS Code shows the device picker, these entries usually mean:
+
+- `Chrome` -> web target
+- `macOS` -> desktop target
+- `Start iOS Simulator` -> iOS simulator from Xcode
+- `Start Pixel ...` -> Android emulator (AVD) from Android SDK
+- `Create Android emulator` -> create a new AVD
+
+`Offline Emulators` means the emulator exists but is not currently running.
 
 ## Usage
 
