@@ -18,6 +18,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   late final WeatherService _weatherService;
 
   Weather? _weather;
+  String? _errorMessage;
   bool _isLoading = false;
 
   @override
@@ -34,6 +35,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
     try {
       setState(() {
         _isLoading = true;
+        _errorMessage = null;
       });
 
       final city = await _weatherService.getCurrentCity();
@@ -41,9 +43,14 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
       setState(() {
         _weather = weather;
+        _errorMessage = null;
       });
     } catch (e) {
       debugPrint(e.toString());
+      setState(() {
+        _weather = null;
+        _errorMessage = _buildErrorMessage(e);
+      });
     } finally {
       setState(() {
         _isLoading = false;
@@ -58,20 +65,34 @@ class _WeatherScreenState extends State<WeatherScreen> {
     try {
       setState(() {
         _isLoading = true;
+        _errorMessage = null;
       });
 
       final weather = await _weatherService.getWeather(city);
 
       setState(() {
         _weather = weather;
+        _errorMessage = null;
       });
     } catch (e) {
       debugPrint(e.toString());
+      setState(() {
+        _weather = null;
+        _errorMessage = _buildErrorMessage(e);
+      });
     } finally {
       setState(() {
         _isLoading = false;
       });
     }
+  }
+
+  String _buildErrorMessage(Object error) {
+    final text = error.toString().toLowerCase();
+    if (text.contains('city not found') || text.contains('status 404')) {
+      return 'City not found';
+    }
+    return 'Failed to load weather data';
   }
 
   String getWeatherAnimation(String? mainCondition) {
@@ -148,7 +169,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 Expanded(
                   child: Center(
                     child: _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
+                        ? Lottie.asset(
+                            'assets/loading.json',
+                            width: 180,
+                            height: 180,
+                            fit: BoxFit.contain,
+                          )
                         : Container(
                             width: double.infinity,
                             padding: const EdgeInsets.all(24),
@@ -167,13 +193,26 @@ class _WeatherScreenState extends State<WeatherScreen> {
                               ],
                             ),
                             child: _weather == null
-                                ? const Text(
-                                    'No weather data',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                    ),
-                                    textAlign: TextAlign.center,
+                                ? Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Lottie.asset(
+                                        'assets/nodata.json',
+                                        width: 180,
+                                        height: 180,
+                                        fit: BoxFit.contain,
+                                      ),
+                                      const SizedBox(height: 12),
+                                      Text(
+                                        _errorMessage ?? 'No weather data',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
                                   )
                                 : Column(
                                     mainAxisSize: MainAxisSize.min,
